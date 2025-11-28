@@ -1,0 +1,178 @@
+openapi : 3.0.0
+info:
+  title: Pico W WebServer Async API
+  version: 1.0.0
+  description: >
+    HTTP-API für Raspberry Pi Pico W (CircuitPython).
+    Unterstützt Konfigurationsabfrage/-aktualisierung und Gerätestatus.
+servers:
+  - url: http://{host}:{port}
+    description: Lokaler Server
+    variables:
+      host:
+        default: "192.168.178.192"
+      port:
+        default: "80"
+
+paths:
+  /config:
+    get:
+      summary: Konfiguration abrufen
+      description: Gibt die aktuelle Gerätekonfiguration zurück.
+      responses:
+        '200':
+          description: Konfiguration erfolgreich abgerufen
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  device_id:
+                    type: string
+                  names:
+                    type: string
+                  location:
+                    type: string
+                  mqtt_broker:
+                    type: string
+                  mqtt_port:
+                    type: integer
+                  mqtt_user:
+                    type: string
+                  reading_interval_seconds:
+                    type: integer
+                  sensor_pin:
+                    type: integer
+        '500':
+          description: Interner Serverfehler
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  status_code:
+                    type: integer
+
+    post:
+      summary: Konfiguration aktualisieren
+      description: Aktualisiert die Gerätekonfiguration. JSON-Body erforderlich.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device_id:
+                  type: string
+                names:
+                  type: string
+                location:
+                  type: string
+                mqtt_broker:
+                  type: string
+                mqtt_port:
+                  type: integer
+                mqtt_user:
+                  type: string
+                mqtt_password:
+                  type: string
+                reading_interval_seconds:
+                  type: integer
+                sensor_pin:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Konfiguration erfolgreich aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updated_fields:
+                    type: array
+                    items:
+                      type: string
+                  reboot:
+                    type: boolean
+        '400':
+          description: Ungültige Anfrage (z.B. leerer Body, falsche Schlüssel)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  status_code:
+                    type: integer
+        '404':
+          description: Endpunkt nicht gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  status_code:
+                    type: integer
+        '500':
+          description: Interner Serverfehler
+
+  /status:
+    get:
+      summary: Gerätestatus abrufen
+      description: Gibt den aktuellen Status des Geräts zurück, inkl. Sensorwerte und MQTT/WiFi-Status
+      responses:
+        '200':
+          description: Status erfolgreich abgerufen
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  device_id:
+                    type: string
+                  wifi_connected:
+                    type: boolean
+                  wifi_ssid:
+                    type: string
+                  ip_address:
+                    type: string
+                    nullable: true
+                  mqtt_connected:
+                    type: boolean
+                  mqtt_broker:
+                    type: string
+                  uptime_seconds:
+                    type: integer
+                  last_temperature:
+                    type: number
+                    nullable: true
+                  last_humidity:
+                    type: number
+                    nullable: true
+                  last_reading_timestamp:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  firmware_version:
+                    type: string
+        '500':
+          description: Interner Serverfehler
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string  
+                  status_code:
+                    type: integer
+

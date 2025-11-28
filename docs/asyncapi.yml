@@ -1,0 +1,137 @@
+asyncapi: '2.6.0'
+info:
+  title: Pico W IoT Sensors
+  version: '1.0.0'
+  description: |
+    AsyncAPI-Spezifikation für Raspberry Pi Pico W Sensoren.
+    Enthält Temperatur-, Luftfeuchtigkeits- und Status-Topics.
+
+servers:
+  mqttBroker:
+    url: mqtt://158.180.44.197
+    port: 1883
+    protocol: mqtt
+    description: Zentraler MQTT-Broker für die Gerätekommunikation
+
+channels:
+  iiot/group/Schmidt-Naegele/sensor/temperatur:
+    description: Publiziert Temperaturmessungen des Geräts
+    publish:
+      operationId: publishTemperature
+      summary: Sendet Temperaturdaten
+      message:
+        name: TemperatureMessage
+        title: Temperatur-Daten
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/TemperatureReading'
+
+  iiot/group/Schmidt-Naegele/sensor/humidity:
+    description: Publiziert Luftfeuchtigkeitsmessungen des Geräts
+    publish:
+      operationId: publishHumidity
+      summary: Sendet Luftfeuchtigkeitsdaten
+      message:
+        name: HumidityMessage
+        title: Luftfeuchtigkeit-Daten
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/HumidityReading'
+
+  iiot/group/Schmidt-Naegele/sensor/status:
+    description: Publiziert Statusmeldungen des Geräts (z.B. online, rebooting)
+    publish:
+      operationId: publishStatus
+      summary: Sendet Statusmeldungen
+      message:
+        name: StatusMessage
+        title: Gerätestatus
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/StatusMessage'
+
+components:
+  schemas:
+    TemperatureReading:
+      type: object
+      required:
+        - device_id
+        - timestamp
+        - value
+        - unit
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Zeitpunkt der Messung (ISO8601)
+          example: "2025-08-28T10:00:00Z"
+        device_id:
+          type: string
+          description: Eindeutige ID des Geräts aus der Konfiguration
+          example: "device-001"
+        value:
+          type: number
+          description: Gemessene Temperatur
+          example: 22.5
+        unit:
+          type: string
+          description: Einheit der Messung
+          enum: [°C, K]
+          example: "°C"
+        status:
+          type: string
+          description: Status der Messung
+          enum: [ok, error, offline]
+          example: "ok"
+
+    HumidityReading:
+      type: object
+      required:
+        - device_id
+        - timestamp
+        - value
+        - unit
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Zeitpunkt der Messung (ISO8601)
+          example: "2025-08-28T10:00:00Z"
+        device_id:
+          type: string
+          description: Eindeutige ID des Geräts aus der Konfiguration
+          example: "device-001"
+        value:
+          type: number
+          description: Gemessene Luftfeuchtigkeit
+          example: 55.2
+        unit:
+          type: string
+          description: Einheit der Messung
+          enum: [%]
+          example: "%"
+        status:
+          type: string
+          description: Status der Messung
+          enum: [ok, error, offline]
+          example: "ok"
+
+    StatusMessage:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        device_id:
+          type: string
+          description: Eindeutige ID des Geräts aus der Konfiguration
+          example: "device-001"
+        status:
+          type: string
+          description: Statusmeldung des Geräts
+          enum: [online, offline]
+          example: "online"
+        timestamp:
+          type: number
+          description: Zeitpunkt der Statusmeldung (ISO8601)
+          example: "2025-08-28T10:00:00Z"

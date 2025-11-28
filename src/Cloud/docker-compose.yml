@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  # PostgreSQL-Datenbank
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_sensors
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: sensors_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d sensors_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - sensor_network
+
+  # Grafana Visualisierung
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_sensors
+    ports:
+      - "4000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - sensor_network
+
+  # MQTT Collector
+  collector:
+    build: ./collector
+    container_name: mqtt_collector
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=sensors_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - MQTT_HOST=158.180.44.197
+      - MQTT_PORT=1883
+      - MQTT_USER=bobm
+      - MQTT_PASS= MQTT_PASSWORD
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - sensor_network
+
+volumes:
+  postgres_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  sensor_network:
+    driver: bridge

@@ -5,3 +5,6 @@ __pycache__/
 .pdm-python
 /.quarto/
 _site/
+
+settings.toml
+src/Cloud/postgres_data/

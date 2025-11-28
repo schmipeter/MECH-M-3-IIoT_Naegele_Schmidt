@@ -8,9 +8,8 @@
 
 # --- Geräteeinstellungen ---
 # Eindeutiger Name für diesen Sensor, wird in den MQTT-Nachrichten verwendet.
-# z.B. "prod-hall-3-vomp"
 device_id = "Sensor-Schmidt-Naegele"
-names = "{Schmidt-Naegele}"
+names = "Schmidt-Naegele"
 
 # Optionaler, menschenlesbarer Standort für das Web-Interface.
 location = "Produktionshalle 1, Innsbruck"
@@ -19,8 +18,8 @@ location = "Produktionshalle 1, Innsbruck"
 # --- WLAN-Einstellungen ---
 # SSID (Name) und Passwort des lokalen WLAN-Netzwerks.
 # WICHTIG: Diese müssen vor Ort eingetragen werden!
-CIRCUITPY_WIFI_SSID = "iot-wlan-2024"
-CIRCUITPY_WIFI_PASSWORD = "mci_lecture&42"
+CIRCUITPY_WIFI_SSID = "WIFINAME"
+CIRCUITPY_WIFI_PASSWORD = "WIFIPassword"
 
 
 # --- MQTT Broker Einstellungen ---
@@ -34,7 +33,7 @@ READING_INTERVAL = 30
 
 # Topics sind wie "Kanäle", auf denen Nachrichten gesendet werden.
 # Das Haupt-Topic für die Sensordaten (Temperatur, Luftfeuchtigkeit).
-telemetry_topic_temperature = "iiot/group/Schmidt-Naegele/sensor/temperatur"
+telemetry_topic_temperature = "iiot/group/Schmidt-Naegele/sensor/temperature"
 telemetry_topic_humidity = "iiot/group/Schmidt-Naegele/sensor/humidity"
 # Das Topic für Statusmeldungen (z.B. "online", "rebooting").
 status_topic = "iiot/group/Schmidt-Naegele/sensor/status"
@@ -45,5 +44,5 @@ status_topic = "iiot/group/Schmidt-Naegele/sensor/status"
 reading_interval_seconds = 10
 
 # Der GPIO Pin des Raspberry Pi Pico, an dem das Datenkabel des
-# DHT22-Sensors angeschlossen ist (z.B. GP15).
+# DHT22-Sensors angeschlossen ist
 sensor_pin = 22

@@ -1,11 +1,16 @@
 [project]
-name = "MECH-M-3-IIoT"
+name = "MECH-M-3-IIoT_Naegele_Schmidt"
 version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
     {name = "jhumci", email = "julian.huber@mci.edu"},
+    {name = "Simon Naegele", email = "simon.naegele-online.de"},
 ]
-dependencies = ["quarto>=0.1.0"]
+dependencies = [
+    "quarto>=0.1.0",
+    "influxdb-client>=1.49.0",
+    "paho-mqtt>=2.1.0",
+]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
