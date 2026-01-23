@@ -8,7 +8,7 @@
   - MQTT-Kommunikation für Sensordaten (Temperatur, Luftfeuchtigkeit) und Statusmeldungen
 
 - **`boot.py`**  
-Setzt den den Pico auf write Acces so das det Http endpunkt die Config ändern kann
+Setzt den den Pico auf write Acces so das der Http endpunkt die Config ändern kann.
 Achtung wenn boot.py aktiv kann der Pico nicht mehr vom PC beschrieben werden.
 
 - **`settings.toml`**  
